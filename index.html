@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Seita</title>
+    <style>
+        body {
+            background-color: #000; /* Fundo preto */
+            color: #fff; /* Texto branco */
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Conteúdo fica mais acima */
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        img.logo {
+            max-width: 40%; /* Ajusta o tamanho da logo */
+            height: auto;
+            margin-top: 20px;
+            cursor: pointer; /* Cursor de clique */
+        }
+
+        .final-text {
+            font-size: 2rem;
+            color: #FF0000; /* O vermelho mais intenso */
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%; /* Limita a largura do texto para garantir que caiba na tela */
+            word-wrap: break-word; /* Quebra palavras longas */
+            line-height: 1.5; /* Adiciona espaçamento entre as linhas */
+            cursor: pointer; /* Cursor de clique no texto final */
+        }
+
+        video {
+            display: none; /* Oculto até ser ativado */
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Estilos para a marca d'água */
+        .watermark {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            opacity: 0.5; /* Transparente para ser discreto */
+            max-width: 100px; /* Tamanho pequeno */
+            z-index: 9999; /* Sempre visível no topo */
+        }
+
+        /* Estilos responsivos para telas menores */
+        @media (max-width: 768px) {
+            .final-text {
+                font-size: 1.5rem; /* Ajusta o tamanho da fonte para dispositivos menores */
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            img.logo {
+                max-width: 60%; 
+            }
+        }
+
+        @media (max-width: 480px) {
+            .final-text {
+                font-size: 1.2rem; /* Ajusta o tamanho da fonte para dispositivos muito pequenos */
+            }
+
+            h1 {
+                font-size: 1rem;
+            }
+
+            img.logo {
+                max-width: 80%; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <img id="logo" class="logo" src="logo.png" alt="Logo" onclick="updateContent()">
+    
+    <div id="text-content">
+        <h1>Eu te esperei aqui, e como uma ovelha perdida, você acabou me encontrando.</h1>
+    </div>
+
+    <!-- Marca d'água -->
+    <img src="/ass.png" alt="Marca D'água" class="watermark"> <!-- Marca d'água no canto inferior esquerdo -->
+
+    <video id="video" src="cask.mp4"></video> <!-- Vídeo cask.mp4 -->
+
+    <script>
+        let clickCount = 0; // Variável para controlar o número de cliques
+
+        function updateContent() {
+            clickCount++; // Incrementa o número de cliques
+            if (clickCount === 1) {
+                // No primeiro clique, exibe o texto fornecido
+                const newText = `
+                <p>Se tu és o convocado, sinta-se à vontade ao tribunal, adentre ao seu nome e conceda tua verdadeira face.</p>
+                <p>Caso você seja um intruso, apenas desfrute de cada vulgo e desvende cada cargo.</p>
+                `;
+                document.getElementById('text-content').innerHTML = newText;
+            } else if (clickCount === 2) {
+                // No segundo clique, exibe o texto final em vermelho
+                document.getElementById('text-content').innerHTML = `
+                    <div class="final-text" onclick="showVideoFullScreen()">
+                        Doyhv - Pdoglwr Mxgdv<br>
+                        Ylfwru Olpd - idovr khuól<br>
+                        Idqwl - dwé wx, Euxwxv ?<br>
+                        Phvtxlwd - shugrh-rv sdl, hohv qãr vdehp r txh idchp<br>
+                        Gxgx - fdrv frqwurodgr<br>
+                        Slhwud - dodupdqwh gh yíerudv<br>
+                        Zhqghu - Oúflihu fdígr<br>
+                        Ixpdvd - lqvdqlgdgh h vriulphqwr hwhuqr<br>
+                        Dqd - pdoglwd vhmd ololwk<br>
+                        Dqqd - ilokrwh gh ehochex<br>
+                        Wkh pdq - idovr surihwd<br>
+                        Jkrvw - orxfr lqmúulr<br>
+                        Wkdív - fduêqfld dpexodqwh<br>
+                        MN - lqilqgd lqfrpshwêqfld
+                    </div>
+                `;
+            }
+        }
+
+        function showVideoFullScreen() {
+            const video = document.getElementById('video');
+            video.style.display = 'block'; // Exibe o vídeo
+            video.volume = 1.0; // Define o volume do vídeo no máximo
+            video.setAttribute('controls', 'controls'); // Adiciona os controles ao vídeo
+            video.play(); // Reproduz o vídeo
+
+            // Solicita o modo tela cheia
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.mozRequestFullScreen) { // Firefox
+                video.mozRequestFullScreen();
+            } else if (video.webkitRequestFullscreen) { // Chrome, Safari e Opera
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) { // IE/Edge
+                video.msRequestFullscreen();
+            }
+
+            // Detecta quando o vídeo termina e fecha a aba
+            video.addEventListener('ended', closeSite);
+
+            // Detecta quando o usuário sai do modo tela cheia
+            document.addEventListener('fullscreenchange', exitHandler);
+            document.addEventListener('webkitfullscreenchange', exitHandler);
+            document.addEventListener('mozfullscreenchange', exitHandler);
+            document.addEventListener('MSFullscreenChange', exitHandler);
+
+            function exitHandler() {
+                if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+                    closeSite(); // Fecha a aba ao sair do modo tela cheia
+                }
+            }
+        }
+
+        function closeSite() {
+            // Fecha a aba (não funciona em todos os navegadores)
+            window.close();
+
+            // Se o navegador não permitir fechar a aba, redireciona para uma página em branco
+            window.location.href = "about:blank";
+        }
+    </script>
+</body>
+</html>
